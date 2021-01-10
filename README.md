@@ -7,6 +7,15 @@ This project is a basic layout of how we can build microservices architecture. I
   <img src="https://miro.medium.com/max/3014/1*4wlrVzmhOioc3PFbuic2tg.png" width="350" title="hover text">
 </p>
 
+[Documentation](https://documenter.getpostman.com/view/4658799/TVzPoKa6)
+
+## Dependencies
+  - php : ^7.3|^8.0
+  - dusterio/lumen-passport : ^0.3.2,
+  - guzzlehttp/guzzle : ^7.2,
+  - laravel/lumen-framework: ^8.0,
+  - pusher/pusher-php-server: ~4.0
+
 ## Few important concepts covered in this project are:
 
  - Sqlite Database, database migration, factory and seeder
