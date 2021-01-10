@@ -8,6 +8,9 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Services\OwnerService;
+use App\Events\OwnerCreatedEvent;
+use App\Events\OwnerUpdatedEvent;
+use App\Events\OwnerDeletedEvent;
 
 class OwnerController extends Controller
 {
@@ -51,6 +54,9 @@ class OwnerController extends Controller
     {
         $owner = $this->ownerService->createOwner($request->all(), Response::HTTP_CREATED);
 
+        // fire event when owner registered
+        event(new OwnerCreatedEvent($owner));
+
         return $this->successResponse($owner);
 
     }
@@ -75,6 +81,9 @@ class OwnerController extends Controller
     {
         $owner = $this->ownerService->updateOwner($request->all(), $id);
 
+        // fire event when owner updated
+        event(new OwnerUpdatedEvent($owner));
+
         return $this->successResponse($owner);
     }
 
@@ -85,6 +94,9 @@ class OwnerController extends Controller
     public function delete($id)
     {
         $owner = $this->ownerService->deleteOwner($id);
+
+        // fire event when owner deleted
+        event(new OwnerDeletedEvent($owner));
 
         return $this->successResponse($owner);
 

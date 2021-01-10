@@ -3,17 +3,33 @@
 namespace App\Providers;
 
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
+use App\Events\OwnerCreatedEvent;
+use App\Listeners\OwnerCreatedListener;
 
 class EventServiceProvider extends ServiceProvider
 {
     /**
-     * The event listener mappings for the application.
+     * The event listener on owner created.
      *
      * @var array
      */
     protected $listen = [
-        \App\Events\ExampleEvent::class => [
-            \App\Listeners\ExampleListener::class,
+        OwnerCreatedEvent::class => [
+            OwnerCreatedListener::class,
+        /** add more listerners*/
+            //subscribe newsletter
+            //send tutorial
         ],
     ];
+
+    /**
+     * Register any evnts for applications
+     * 
+     * @return void
+     */
+
+    public function boot()
+    {
+        parent::boot();
+    }
 }

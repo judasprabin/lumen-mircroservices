@@ -1,3 +1,4 @@
+
 <?php
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -32,7 +33,7 @@ $app->withEloquent();
  */
 $app->configure('services');
 $app->configure('auth');
-
+$app->configure('broadcasting');
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -105,7 +106,7 @@ $app->routeMiddleware([
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
