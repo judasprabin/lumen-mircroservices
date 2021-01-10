@@ -4,10 +4,11 @@ Laravel Lumen is a stunningly fast PHP micro-framework based on Laravel. It uses
 This project is a basic layout of how we can build microservices architecture. It contains 2 microservices (Owner & Car) and API gateway to connect these services between application and internal services.
 
 ## Few important concepts covered in this project are:
+
  - Sqlite Database, database migration, factory and seeder
  - OAuth 2.0 authentication to Gateway using Passport 
- - Application request handling
- - Internal mircroservices communication and security
+ - Guzzle PHP HTTP client send HTTP requests to integrate with web services.
+ - Internal mircroservices security
  - Event broadcasting using Pusher (Implemented only for Owner's create read update operations)
  - Testing using PhpUnit (Testing done only for owners json response)
 
