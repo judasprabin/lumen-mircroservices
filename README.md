@@ -3,6 +3,8 @@ Laravel Lumen is a stunningly fast PHP micro-framework based on Laravel. It uses
 
 This project is a basic layout of how we can build microservices architecture. It contains 2 microservices (Owner & Car) and API gateway to connect these services between application and internal services.
 
+![alt text](https://miro.medium.com/max/3014/1*4wlrVzmhOioc3PFbuic2tg.png)
+
 ## Few important concepts covered in this project are:
 
  - Sqlite Database, database migration, factory and seeder
