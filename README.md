@@ -79,3 +79,11 @@ It can be installed using following package;
  
 - https://github.com/dusterio/lumen-passport
 
+## PHP 8.0 Issue
+Invalid opcode 117/2/0 while generating access token for the user in PHP 8.0
+
+Requires setting opcache.optimization_level=0 in php.ini file for temparary solution.
+
+This is a known bug that should be fixed in PHP 8.0.1
+
+
