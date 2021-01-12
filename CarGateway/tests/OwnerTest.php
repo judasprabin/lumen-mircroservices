@@ -4,6 +4,7 @@ use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use Illuminate\Http\Response;
 
+
 class OwnerTest extends TestCase
 {
     use DatabaseTransactions;
@@ -12,22 +13,9 @@ class OwnerTest extends TestCase
     public function testLogin()
     {
 
-        $parameters = [
-            "grant_type" => "client_credentials",
-            "client_id" => 2,
-            "client_secret" => "rH9H2Cdtfzke4qxW0M4ow6UgLBkUgl3uMQw5EWZm",
-            "scope" => "*"
-        ];
-
-        $response = $this->post("/oauth/token", $parameters, ['Accept' => 'application/json']);
-
-        $token = json_decode($this->response->getContent(), true);
-
-        $this->headers['Accept'] = 'application/json';
-        $this->headers['Authorization'] = 'Bearer ' . $token['access_token'];
-
-        // $this->assertStatus(200);
-        $this->seeJson(["access_token"]);
+        $token = $this->loginApi();
+        $this->seeStatusCode(200);
+        $this->seeJson(["token_type" => "Bearer"]);
 
 
     }
@@ -36,30 +24,25 @@ class OwnerTest extends TestCase
      */
     public function testShouldReturnAllOwners()
     {
-
-        $parameters = [
-            "grant_type" => "client_credentials",
-            "client_id" => 2,
-            "client_secret" => "rH9H2Cdtfzke4qxW0M4ow6UgLBkUgl3uMQw5EWZm",
-            "scope" => "*"
-        ];
-
-        $response = $this->post("/oauth/token", $parameters, ['Accept' => 'application/json']);
-
+        $response = $this->loginApi();
         $token = json_decode($this->response->getContent(), true);
 
         $headers['Content-Type'] = 'application/json';
         $headers['Authorization'] = 'Bearer ' . $token['access_token'];
 
-        $this->get("/owners", [], $headers);
-        // $this->seeStatusCode(200);
-        $this->seeJson([
-            'name',
-            'email',
-            'address',
-            'created_at',
-            'updated_at',
-        ]);
+        $this->get("/owners", $headers);
+        $this->seeStatusCode(200);
+
+        // $this->seeJsonStructure(
+        //     ['data' =>
+        //         [
+        //         'name',
+        //         'email',
+        //         'address',
+        //         'created_at',
+        //         'updated_at',
+        //     ]]
+        // );
 
     }
 
@@ -68,29 +51,24 @@ class OwnerTest extends TestCase
      */
     public function testShouldReturnOwner()
     {
-        $parameters = [
-            "grant_type" => "client_credentials",
-            "client_id" => 2,
-            "client_secret" => "rH9H2Cdtfzke4qxW0M4ow6UgLBkUgl3uMQw5EWZm",
-            "scope" => "*"
-        ];
-
-        $response = $this->post("/oauth/token", $parameters, ['Accept' => 'application/json']);
-
+        $response = $this->loginApi();
         $token = json_decode($this->response->getContent(), true);
 
         $headers['Content-Type'] = 'application/json';
         $headers['Authorization'] = 'Bearer ' . $token['access_token'];
 
-        $this->get("/owners/2", $headers);
-        // $this->seeStatusCode(200);
-        $this->seeJson([
-            'name',
-            'email',
-            'address',
-            'created_at',
-            'updated_at',
-        ]);
+        $this->get("/owners/13", $headers);
+        $this->seeStatusCode(200);
+        $this->seeJsonStructure(
+            ['data' =>
+                [
+                'name',
+                'email',
+                'address',
+                'created_at',
+                'updated_at',
+            ]]
+        );
 
     }
 
@@ -99,29 +77,28 @@ class OwnerTest extends TestCase
      */
     public function testShouldCreateOwner()
     {
+        $faker = Faker\Factory::create();
 
-        $parameters = [
-            "grant_type" => "client_credentials",
-            "client_id" => 2,
-            "client_secret" => "rH9H2Cdtfzke4qxW0M4ow6UgLBkUgl3uMQw5EWZm",
-            "scope" => "*"
-        ];
-
-        $response = $this->post("/oauth/token", $parameters, ['Accept' => 'application/json']);
-
+        $response = $this->loginApi();
         $token = json_decode($this->response->getContent(), true);
 
         $headers['Content-Type'] = 'application/json';
         $headers['Authorization'] = 'Bearer ' . $token['access_token'];
 
-        $parameters = ['name' => 'test owner', 'email' => 'newemail@gmail.com', 'address' => 'Test loaction21', 'password' => 'secret'];
+        $parameters = ['name' => 'test owner', 'email' => $faker->email(), 'address' => 'Test loaction21', 'password' => 'secret'];
 
         $this->json('post', "/owners", $parameters, $headers);
-        // $this->seeStatusCode(200);
-        $this->seeJson([
-            'name',
-            'email',
-        ]);
+        $this->seeStatusCode(200);
+        $this->seeJsonStructure(
+            ['data' =>
+                [
+                'name',
+                'email',
+                'address',
+                'created_at',
+                'updated_at',
+            ]]
+        );
 
     }
 
@@ -130,35 +107,68 @@ class OwnerTest extends TestCase
      */
     public function testShouldUpdateOwner()
     {
-        $parameters = [
-            "grant_type" => "client_credentials",
-            "client_id" => 2,
-            "client_secret" => "rH9H2Cdtfzke4qxW0M4ow6UgLBkUgl3uMQw5EWZm",
-            "scope" => "*"
-        ];
+        $faker = Faker\Factory::create();
 
-        $response = $this->post("/oauth/token", $parameters, ['Accept' => 'application/json']);
-
+        $response = $this->loginApi();
         $token = json_decode($this->response->getContent(), true);
 
         $headers['Content-Type'] = 'application/json';
         $headers['Authorization'] = 'Bearer ' . $token['access_token'];
 
-        $parameters = ['name' => 'test owner', 'email' => 'newemail11@gmail.com', 'address' => 'Test loaction21', 'password' => 'secret'];
+        $parameters = ['name' => $faker->name(), 'address' => $faker->address()];
 
         $this->json("PUT", "owners/4", $parameters, $headers);
         // $this->seeStatusCode(200);
-        $this->seeJson([
-            'name',
-            'email'
-        ]);
+
+        $this->seeJsonStructure(
+            ['data' =>
+                [
+                'name',
+                'email',
+                'address',
+                'created_at',
+                'updated_at',
+            ]]
+        );
 
     }
 
     /**
      * /owners/id [DELETE]
      */
-    public function testShouldDeleteProduct()
+    public function testShouldDeleteOwner()
+    {
+        $faker = Faker\Factory::create();
+
+        $response = $this->loginApi();
+        $token = json_decode($this->response->getContent(), true);
+
+        $headers['Content-Type'] = 'application/json';
+        $headers['Authorization'] = 'Bearer ' . $token['access_token'];
+
+        $parameters = ['name' => 'test owner', 'email' => $faker->email(), 'address' => 'Test loaction21', 'password' => 'secret'];
+
+        $owner = $this->json('post', "/owners", $parameters, $headers);
+        $owner = json_decode($this->response->getContent());
+
+        $this->json("delete", "/owners/{$owner->data->id}", [], $headers);
+        $this->seeStatusCode(200);
+        $this->seeJsonStructure(
+            ['data' =>
+                [
+                'name',
+                'email',
+                'address',
+                'created_at',
+                'updated_at',
+            ]]
+        );
+
+
+    }
+
+    // login function
+    function loginApi()
     {
         $parameters = [
             "grant_type" => "client_credentials",
@@ -169,19 +179,6 @@ class OwnerTest extends TestCase
 
         $response = $this->post("/oauth/token", $parameters, ['Accept' => 'application/json']);
 
-        $token = json_decode($this->response->getContent(), true);
-
-        $headers['Content-Type'] = 'application/json';
-        $headers['Authorization'] = 'Bearer ' . $token['access_token'];
-
-
-        $this->json("delete", "/owners/2", [], $headers);
-        // $this->seeStatusCode(410);
-        $this->seeJson([
-            'name',
-            'email'
-        ]);
-
+        return $response;
     }
-
 }

@@ -20,6 +20,6 @@ class OwnerCreatedListener
         /**
          * We define the operations to that events here
          */
-        var_dump('Some Action');
+        // dump('Some Action');
     }
 }
